@@ -1,0 +1,27 @@
+* {
+  margin: 0em;
+  padding: 0em;
+}
+
+body {
+  font-size: 16px;
+  /* width: 60em; */
+  margin: 1em auto;
+  font-family: sans-serif;
+} 
+
+.container {
+  height: 30em;
+  width: 30em;
+  /* border: 1px solid black; */
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.shade{
+  /* border: 1px solid red; */
+  width: 33.33%;
+  height: 33.33%;
+  /* background-color: rebeccapurple; */
+}
