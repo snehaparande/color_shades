@@ -1,24 +1,24 @@
 const { writeFileSync } = require('fs');
+const MAX_RGB = 255;
+const MAX_ALPHA = 1;
 
-const openingTag = (tag, attributes) => '<' + tag + attributes + '>';
+const randomInt = (limit) => Math.round(Math.random() * limit);
+
+const openingTag = (tag, attributes) => '<' + tag + ' ' + attributes + '>';
 
 const closingTag = tag => '</' + tag + '>';
 
-const classAttribute = (value) => {
-  return value ? ' class="' + value + '"' : '';
-};
+const classAttribute = (value) => 'class="' + value + '"';
 
-const generateTag = function(tag, attribute, content){
-  return openingTag(tag, classAttribute(attribute)) + content + closingTag(tag);
+const style = function (rgb, alpha) {
+  const color = rgb.join(',');
+  return 'style= "background-color: rgba(' + color + ',' + alpha + ')"';
 };
 
 const link = () => '<link rel="stylesheet" href="styles.css"/>';
 
-const randomInt = (limit) => Math.round(Math.random() * limit);
-
-const style = function (rgb, alpha) {
-  const color = rgb.reduce((context, rgbValue) => rgbValue + ',' + context, '');
-  return 'style= "background-color: rgba(' + color + alpha + ')"';
+const createTag = function(tag, attribute, content){
+  return openingTag(tag, classAttribute(attribute)) + content + closingTag(tag);
 };
 
 const shade = (rgb, alpha) => {
@@ -27,35 +27,28 @@ const shade = (rgb, alpha) => {
 };
 
 const shades = function () {
-  const maxRgb = 256;
+  const rgb = [randomInt(MAX_RGB), randomInt(MAX_RGB), randomInt(MAX_RGB)];
   const inc = 0.10;
-  const rgb = [randomInt(maxRgb), randomInt(maxRgb), randomInt(maxRgb)];
+  const fractionDigits = 2;
   let alpha = 0.15;
   let divs = '';
   do {
     divs = shade(rgb, alpha) + divs;
     alpha += inc;
-    alpha = +alpha.toFixed(2);
-  } while (alpha < 1);
+    alpha = +alpha.toFixed(fractionDigits);
+  } while (alpha < MAX_ALPHA);
   return divs;
 };
 
-const generateBody = function () {
-  const container = generateTag('div', 'container', shades());
-  return generateTag('body', '', container);
-};
-
 const createPage = function () {
-  const headContent = generateTag('title', '', 'Color Shades') + link();
-  const head = generateTag('head', '', headContent);
-  const body = generateBody();
+  const headContent = createTag('title', '', 'Color Shades') + link();
+  const head = createTag('head', '', headContent);
+  const bodyContent = createTag('div', 'container', shades());
+  const body = createTag('body', '', bodyContent);
 
-  return generateTag('html', '', head + body);
+  return createTag('html', '', head + body);
 };
 
-const shadesGenerator = function () {
-  const htmlCode = createPage();
-  writeFileSync('index.html', htmlCode, 'utf8');
-};
+const shadesGenerator = () => writeFileSync('index.html', createPage(), 'utf8');
 
 shadesGenerator();
