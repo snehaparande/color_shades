@@ -90,9 +90,11 @@ const main = () => {
   const color = process.argv.slice(2).map(Number);
 
   if (isValid(color)) {
-    return shadesGenerator(color);
+    shadesGenerator(color);
+    log(0);
+    return;
   }
-  log('Invalid RGB values!');
+  log(1);
 };
 
 main();
