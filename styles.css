@@ -7,17 +7,16 @@ body {
   font-size: 16px;
   margin: 1em auto;
   font-family: sans-serif;
-} 
-
-.container {
-  height: 30em;
-  width: 30em;
-  margin: auto;
-  display: flex;
-  flex-wrap: wrap;
 }
 
-.shade{
+.container {
+  height: 100em;
+  width: 70em;
+  margin: auto;
+  display: flex;
+}
+
+.shade {
   width: 33.33%;
   height: 33.33%;
 }

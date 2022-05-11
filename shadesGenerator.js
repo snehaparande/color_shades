@@ -1,14 +1,12 @@
 const { writeFileSync } = require('fs');
+const { log } = console;
 const MAX_RGB = 255;
+const MIN_RGB = 0;
 const MAX_ALPHA = 1;
-
-const randomInt = (limit) => Math.round(Math.random() * limit);
 
 const openingTag = (tag, attributes) => '<' + tag + ' ' + attributes + '>';
 
 const closingTag = tag => '</' + tag + '>';
-
-const classAttribute = (value) => 'class="' + value + '"';
 
 const bg = ({ rgb, alpha }) => {
   const color = rgb.join(',');
@@ -32,12 +30,10 @@ const shade = (color) => {
     { attr: 'class', value: 'shade' },
     { attr: 'style', value: bg(color) }
   ];
-  // return openingTag('div', attributes(attrs)) + closingTag('div');
   return createTag('div', attributes(attrs), '');
 };
 
-const shadesBgs = () => {
-  const rgb = [randomInt(MAX_RGB), randomInt(MAX_RGB), randomInt(MAX_RGB)];
+const shadesBgs = (rgb) => {
   let alpha = 0.15;
   const inc = 0.10;
   const fractionDigits = 2;
@@ -51,23 +47,46 @@ const shadesBgs = () => {
   return bgColors;
 };
 
-const shades = () => shadesBgs().map(bg => shade(bg)).join('');
+const shades = (color) => shadesBgs(color).map(bg => shade(bg)).join('');
 
 const link = () => '<link rel="stylesheet" href="styles.css"/>';
 
-const createPage = function () {
+const createPage = function (color) {
   const headContent = createTag('title', '', 'Color Shades') + link();
   const head = createTag('head', '', headContent);
   const containerAttrs = attributes([{
     'attr': 'class',
     'value': 'container'
   }]);
-  const bodyContent = createTag('div', containerAttrs, shades());
+  const bodyContent = createTag('div', containerAttrs, shades(color));
   const body = createTag('body', '', bodyContent);
 
   return createTag('html', '', head + body);
 };
 
-const shadesGenerator = () => writeFileSync('index.html', createPage(), 'utf8');
+const shadesGenerator = (color) => {
+  writeFileSync('index.html', createPage(color), 'utf8');
+};
 
-shadesGenerator();
+const isValidRgb = (rgbValue) => rgbValue >= MIN_RGB && rgbValue <= MAX_RGB;
+
+const isValid = rgb => {
+  if (rgb.length < 3) {
+    return false;
+  }
+
+  return rgb.reduce((isValid, rgbValue) => {
+    return isValid ? isValidRgb(rgbValue) : isValid;
+  }, true);
+};
+
+const main = () => {
+  const color = process.argv.slice(2).map(Number);
+
+  if (isValid(color)) {
+    return shadesGenerator(color);
+  }
+  log('Invalid RGB values!');
+};
+
+main();
