@@ -35,31 +35,39 @@ const shade = (color) => {
 
 const shadesBgs = (rgb) => {
   let alpha = 0.15;
-  const inc = 0.10;
-  const fractionDigits = 2;
   const bgColors = [];
 
   do {
+    const inc = 0.10;
+    const fractionDigits = 2;
+
     bgColors.unshift({ rgb, alpha });
     alpha += inc;
     alpha = Number(alpha.toFixed(fractionDigits));
   } while (alpha < MAX_ALPHA);
+
   return bgColors;
 };
 
-const shades = (color) => shadesBgs(color).map(bg => shade(bg)).join('');
+const shades = (color) => {
+  const colorShades = shadesBgs(color).map(bg => shade(bg)).join('');
+  const containerAttrs = attributes([{
+    'attr': 'class',
+    'value': 'shades_container'
+  }]);
+  return createTag('div', containerAttrs, colorShades);
+};
 
 const link = () => '<link rel="stylesheet" href="styles.css"/>';
+
+const heading = (color) => createTag('h1', '', 'Shades of rgb(' + color + ')');
 
 const createPage = function (color) {
   const headContent = createTag('title', '', 'Color Shades') + link();
   const head = createTag('head', '', headContent);
-  const containerAttrs = attributes([{
-    'attr': 'class',
-    'value': 'container'
-  }]);
-  const bodyContent = createTag('div', containerAttrs, shades(color));
-  const body = createTag('body', '', bodyContent);
+
+  const header = createTag('header', '', heading(color));
+  const body = createTag('body', '', header + shades(color));
 
   return createTag('html', '', head + body);
 };
@@ -75,9 +83,7 @@ const isValid = rgb => {
     return false;
   }
 
-  return rgb.reduce((isValid, rgbValue) => {
-    return isValid ? isValidRgb(rgbValue) : isValid;
-  }, true);
+  return rgb.every(isValidRgb);
 };
 
 const main = () => {

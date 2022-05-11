@@ -7,16 +7,32 @@ body {
   font-size: 16px;
   margin: 1em auto;
   font-family: sans-serif;
+  background-color: whitesmoke;
 }
 
-.container {
-  height: 100em;
+header {
+  height: 10em;
+  margin: 1em 0em;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header>h1 {
+  color: whitesmoke;
+  font-size: 4em;
+}
+
+.shades_container {
+  height: 40em;
   width: 70em;
   margin: auto;
   display: flex;
+  background-color: white;
 }
 
 .shade {
-  width: 33.33%;
-  height: 33.33%;
+  width: 11.11%;
+  height: 100%;
 }
