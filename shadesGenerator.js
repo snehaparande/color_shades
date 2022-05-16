@@ -50,7 +50,7 @@ const shadesBgs = (rgb) => {
 };
 
 const shades = (color) => {
-  const colorShades = shadesBgs(color).map(bg => shade(bg)).join('');
+  const colorShades = shadesBgs(color).map(shade).join('');
   const containerAttrs = attributes([{
     'attr': 'class',
     'value': 'shades_container'
@@ -60,7 +60,7 @@ const shades = (color) => {
 
 const link = () => '<link rel="stylesheet" href="styles.css"/>';
 
-const heading = (color) => createTag('h1', '', 'Shades of rgb(' + color + ')');
+const heading = color => createTag('h1', '', 'Shades of rgb(' + color + ')');
 
 const createPage = function (color) {
   const headContent = createTag('title', '', 'Color Shades') + link();
