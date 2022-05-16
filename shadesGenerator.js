@@ -1,4 +1,4 @@
-const { writeFileSync } = require('fs');
+const fs = require('fs');
 const { log } = console;
 const MAX_RGB = 255;
 const MIN_RGB = 0;
@@ -73,7 +73,12 @@ const createPage = function (color) {
 };
 
 const shadesGenerator = (color) => {
-  writeFileSync('index.html', createPage(color), 'utf8');
+  try {
+    fs.writeFileSync('./index.html', createPage(color), 'utf8');
+  } catch (error) {
+    const er = error.name + ':' + error.message;
+    throw er;
+  }
 };
 
 const isValidRgb = (rgbValue) => rgbValue >= MIN_RGB && rgbValue <= MAX_RGB;
@@ -86,8 +91,8 @@ const isValid = rgb => {
   return rgb.every(isValidRgb);
 };
 
-const main = () => {
-  const color = process.argv.slice(2).map(Number);
+const main = (colorAsString) => {
+  const color = colorAsString.map(Number);
 
   if (isValid(color)) {
     shadesGenerator(color);
@@ -97,4 +102,4 @@ const main = () => {
   log(1);
 };
 
-main();
+main(process.argv.slice(2));
