@@ -1,28 +1,13 @@
 const fs = require('fs');
-const { log } = console;
+const { error, log } = console;
+const { createTag, attributes, link } = require('./tools.js');
 const MAX_RGB = 255;
 const MIN_RGB = 0;
 const MAX_ALPHA = 1;
 
-const openingTag = (tag, attributes) => '<' + tag + ' ' + attributes + '>';
-
-const closingTag = tag => '</' + tag + '>';
-
 const bg = ({ rgb, alpha }) => {
   const color = rgb.join(',');
   return 'background-color: rgba(' + color + ',' + alpha + ')';
-};
-
-const attribute = ({ attr, value }) => {
-  return attr + '="' + value + '"';
-};
-
-const attributes = (attrs) => {
-  return attrs.map(attr => attribute(attr)).join(' ');
-};
-
-const createTag = function (tag, attributes, content) {
-  return openingTag(tag, attributes) + content + closingTag(tag);
 };
 
 const shade = (color) => {
@@ -57,8 +42,6 @@ const shades = (color) => {
   }]);
   return createTag('div', containerAttrs, colorShades);
 };
-
-const link = () => '<link rel="stylesheet" href="styles.css"/>';
 
 const heading = color => createTag('h1', '', 'Shades of rgb(' + color + ')');
 
@@ -96,7 +79,7 @@ const main = (colorAsString) => {
 
   if (isValid(color)) {
     shadesGenerator(color);
-    log(0);
+    error(0);
     return;
   }
   log(1);
